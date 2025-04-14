@@ -1,7 +1,15 @@
 public class CountingSort {
 
-    public static int[] countingSort(int[] A, int k) {
+    public static int[] countingSort(int[] A) {
         int n = A.length;
+
+        // Find the maximum value (k) in the array A
+        int k = A[0];
+        for (int i = 1; i < n; i++) {
+            if (A[i] > k) {
+                k = A[i];
+            }
+        }
         //Final sorted array
         int[] B = new int[n];
         //Array used for counting
