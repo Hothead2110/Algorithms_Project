@@ -1,10 +1,12 @@
-public class ARUCountingSort {
-    public static void aruCountingSort(int[] A) {
-        int n = A.length;
-        int k = A[0];
+package Sorting;
+
+public class ARUCountingSort implements Sorts {
+    public void sort(final Integer[] arr) {
+        int n = arr.length;
+        int k = arr[0];
         for (int i = 1; i < n; i++) {
-            if (A[i] > k) {
-                k = A[i];
+            if (arr[i] > k) {
+                k = arr[i];
             }
         }
 
@@ -25,8 +27,8 @@ public class ARUCountingSort {
 
         // Step 2: Count quotients and remainders
         for (int j = 0; j < n; j++) {
-            Q[A[j] / m]++;
-            R[A[j] % m]++;
+            Q[arr[j] / m]++;
+            R[arr[j] % m]++;
         }
 
         // Add up all the iterations to prepare for sorting
@@ -37,16 +39,16 @@ public class ARUCountingSort {
 
         // Step 4: Sort by remainder into B
         for (int j = n - 1; j >= 0; j--) {
-            int d = A[j] % m;
+            int d = arr[j] % m;
             R[d]--;
-            B[R[d]] = A[j];
+            B[R[d]] = arr[j];
         }
 
         // Step 5: Sort by quotient into A to receive the fully sorted array
         for (int i = n - 1; i >= 0; i--) {
             int d = B[i] / m;
             Q[d]--;
-            A[Q[d]] = B[i];
+            arr[Q[d]] = B[i];
         }
     }
 }

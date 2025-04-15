@@ -1,13 +1,13 @@
-public class CountingSort {
+package Sorting;
 
-    public static int[] countingSort(int[] A) {
-        int n = A.length;
-
+public class CountingSort implements Sorts {
+    public void sort(final Integer[] arr) {
+        int n = arr.length;
         // Find the maximum value (k) in the array A
-        int k = A[0];
+        int k = arr[0];
         for (int i = 1; i < n; i++) {
-            if (A[i] > k) {
-                k = A[i];
+            if (arr[i] > k) {
+                k = arr[i];
             }
         }
         //Final sorted array
@@ -22,7 +22,7 @@ public class CountingSort {
 
         //Count all the elements in A
         for (int j = 0; j < n; j++) {
-            C[A[j]]++;
+            C[arr[j]]++;
         }
 
         //Complete the commutative counts
@@ -32,11 +32,9 @@ public class CountingSort {
 
         //Build the output array from going from right to left
         for (int j = n - 1; j >= 0; j--) {
-            B[C[A[j]] - 1] = A[j];
-            C[A[j]]--;
+            B[C[arr[j]] - 1] = arr[j];
+            C[arr[j]]--;
         }
-
-        return B;
     }
 }
 
