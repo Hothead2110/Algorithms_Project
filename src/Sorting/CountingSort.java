@@ -11,7 +11,7 @@ public class CountingSort implements Sorts {
             }
         }
         //Final sorted array
-        int[] B = new int[n];
+        Integer[] B = new Integer[n];
         //Array used for counting
         int[] C = new int[k + 1];
 
@@ -35,6 +35,7 @@ public class CountingSort implements Sorts {
             B[C[arr[j]] - 1] = arr[j];
             C[arr[j]]--;
         }
+        System.arraycopy(B, 0, arr, 0, n);
     }
 }
 
