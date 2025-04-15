@@ -6,6 +6,7 @@
         int[] insertion = {5, 7, 2, 0, 1, 232, 456, 3, 2};
         int[] merge = {1, 4, 2, 5, 7, 4, 8, 34, 573, -3};
         int[] quick = {3, 1, 5, 7634, 45, -55, 3, -2, 7};
+        int[] aru_counting = {3, 5, 2, 6, 8, 34, 7, 3};
 
         int[] sorted = CountingSort.countingSort(counting);
         BubbleSort.bubbleSort(bubble);
@@ -13,6 +14,7 @@
         InsertionSort.insertionSort(insertion);
         MergeSort.mergeSort(merge);
         QuickSort.quickSort(quick);
+        ARUCountingSort.aruCountingSort(aru_counting);
 
         System.out.print("Sorted through CountingSort : ");
         PrintArray.printArray(sorted);
@@ -26,5 +28,7 @@
         PrintArray.printArray(merge);
         System.out.print("Sorted through QuickSort : ");
         PrintArray.printArray(quick);
+        System.out.print("Sorted through ARUCountingSort : ");
+        PrintArray.printArray(aru_counting);
     }
 }
