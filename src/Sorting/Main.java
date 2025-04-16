@@ -1,25 +1,54 @@
 package Sorting;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Comparator;
 import java.util.Random;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class Main {
     public static void main(String[] args) {
         // initialise sorts to be tested
-        Sorts[] sorts = {new BubbleSort(), new SelectionSort(), new InsertionSort(), new CountingSort(), new ARUCountingSort(), new MergeSort(), new QuickSort()};
+        Sorts[] sorts = {new CountingSort(), new ARUCountingSort(), new MergeSort(), new QuickSort()};
 
-        // Test each algorithm
-        for (Sorts sort : sorts) {
-            System.out.println(sort.getClass().getSimpleName() + ": ");
-            // test with a generated array - uses method reference
-            testArray(Main::generateIntArray, sort::sort);
+        // values of n and k to be tested
+        int[][] testVals = {
+                {1000,    1000, 10000, 100000, 1000000, 10000000},
+                {10000,   10000, 100000, 1000000, 10000000},
+                {100000,  100000, 1000000, 10000000, 100000000, 1000000000},
+                {1000000, 100000, 1000000, 10000000, 100000000, 1000000000}
+        };
+
+        // opens file at given path for writing
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("analysis\\sort_results.csv")))) {
+            // header in csv
+            writer.println("Algorithm,N,K,Sorted?,AvgTime(s)");
+
+            // for each algorithm
+            for (Sorts sort : sorts) {
+                System.out.println("\nTesting " + sort.getClass().getSimpleName() + ":\n"); // print which algorithm is being tested
+                // test each N value
+                for (int[] arr : testVals) {
+                    int n = arr[0];
+                    // test each k value
+                    for (int i = 1; i < arr.length; i++) {
+                        int k = arr[i];
+                        System.out.printf("N = %d, k = %d -> ", n, k); // display current N and k
+                        testArray(Main::generateIntArray, sort::sort, n, k, sort.getClass().getSimpleName(), writer); // test the algorithm
+                    }
+                }
+            }
+            System.out.println("\nResults written to sort_results.csv");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     static Random rand = new Random(); // random number generator
-    static int N = 10000; // array size
+    static final int NUM_TESTS = 1; // defines number of test to run
 
     /**
      * Tests a sorting algorithm
@@ -30,24 +59,41 @@ public class Main {
      * @param generator Function creates an Integer array of size N
      * @param sort      Consumer that sorts an Integer array
      */
-    public static void testArray(Function<Integer,Integer[]> generator, Consumer<Integer[]> sort) {
-        Integer[] input = generator.apply(N); // generates random array
-        long start = System.currentTimeMillis(); // start time of sort
-        sort.accept(input); // performs sort
-        long end = System.currentTimeMillis(); // end time of sort
-        // check if array is actually sorted and display results
-        System.out.println(sortedArray(input, Comparator.naturalOrder()) + " in " + (end - start) + "ms\n");
+    public static void testArray(BiFunction<Integer, Integer, Integer[]> generator, Consumer<Integer[]> sort, int n, int k, String algorithmName, PrintWriter writer) {
+        long totalTime = 0;
+        Integer[] lastArray = null;
+
+        // loop for number of tests
+        for (int i = 0; i < NUM_TESTS; i++) {
+            Integer[] input = generator.apply(n, k); // generate integer array based on n and k
+            long start = System.nanoTime(); // get start time
+            sort.accept(input); // sort the array
+            long end = System.nanoTime(); // get end time
+
+            totalTime += (end - start); // find time taken
+            lastArray = input;
+        }
+
+        String sortedStatus = sortedArray(lastArray, Comparator.naturalOrder()); // check if sorted
+        double avgTimeSec = (totalTime / 1_000_000_000.0) / NUM_TESTS; // find average time
+
+        System.out.printf("%s in avg %f s (%d runs)%n", sortedStatus, avgTimeSec, NUM_TESTS); // display time taken
+
+        // write line to csv
+        writer.printf("%s,%d,%d,%s,%f%n", algorithmName, n, k, sortedStatus, avgTimeSec);
+        writer.flush(); // make sure line is written
     }
+
 
     /**
      * Generates array of size N of random positive integers
      * @param n Size of array
      * @return  Integer array containing random values in given range
      */
-    public static Integer[] generateIntArray(int n) {
+    public static Integer[] generateIntArray(int n, int k) {
         Integer[] arr = new Integer[n];
         for(int i=0;i<n;i++) {
-            arr[i] = Math.abs(rand.nextInt(10000)); // generates random positive numbers for arrays - can specify bound here
+            arr[i] = Math.abs(rand.nextInt(k+1)); // generates random positive numbers for arrays - can specify bound here
         }
         return arr;
     }
