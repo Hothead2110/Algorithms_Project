@@ -12,12 +12,12 @@ import java.util.function.Consumer;
 public class Main {
     public static void main(String[] args) {
         // initialise sorts to be tested
-        Sorts[] sorts = {new CountingSort(), new ARUCountingSort(), new MergeSort(), new QuickSort()};
+        Sorts[] sorts = {new CountingSort(), new ARUCountingSort(), new MergeSort(), new QuickSort(), new RadixSort()};
 
         // values of n and k to be tested
         int[][] testVals = {
                 {1000,    1000, 10000, 100000, 1000000, 10000000},
-                {10000,   10000, 100000, 1000000, 10000000},
+                {10000,   10000, 100000, 1000000, 10000000, 1000000000},
                 {100000,  100000, 1000000, 10000000, 100000000, 1000000000},
                 {1000000, 100000, 1000000, 10000000, 100000000, 1000000000}
         };
@@ -48,7 +48,7 @@ public class Main {
     }
 
     static Random rand = new Random(); // random number generator
-    static final int NUM_TESTS = 1; // defines number of test to run
+    static final int NUM_TESTS = 5; // defines number of test to run
 
     /**
      * Tests a sorting algorithm

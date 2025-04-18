@@ -1,7 +1,5 @@
 package Sorting;
 
-import java.util.Arrays;
-
 public class RadixSort implements Sorts {
     public void sort(final Integer[] A) {
         if (A == null || A.length == 0) return;
